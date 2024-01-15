@@ -34,8 +34,11 @@ return (
         <AddItemForm itemRefreshCallback={refreshItems} />
         {shoppingList.map((itemData, dataIndex) => {
             return (
+              
                 <div key={dataIndex}>
-                    <p>{itemData.name}  {itemData.quantity}  {itemData.unit}</p>
+                    <ul>
+                    <li>{itemData.name}  Qty:{itemData.quantity}  {itemData.unit}</li>
+                    </ul>
                 </div>
             );
         })}
