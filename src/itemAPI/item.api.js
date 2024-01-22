@@ -19,3 +19,7 @@ export const updateItems = (itemsDataId) => {
 export const totaldeleteItems = () => {
     return axios.delete('/api/items')
 }
+
+export const totalupdateItems = () => {
+    return axios.put('/api/items/')
+}

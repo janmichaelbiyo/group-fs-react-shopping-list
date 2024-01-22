@@ -85,6 +85,24 @@ router.delete('/', (req,res) => {
             res.sendStatus(500);
         })
 })
+
+router.put('/', (req,res) => {
+   
+    const itemsData = req.body
+    const queryshoppingListUpdate = 'UPDATE "shoppingList" SET "purchased" = False'
+    
+    pool
+        .query(queryshoppingListUpdate)
+        .then((response) => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log('this is an error with put', error)
+            res.sendStatus(500);
+        })
+    
+})
+
 //Exporting our router
 module.exports = router;
 

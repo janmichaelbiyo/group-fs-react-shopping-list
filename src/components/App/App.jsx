@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 
 import Header from '../Header/Header.jsx'
 import './App.css';
-import { deleteItems, fetchItems, totaldeleteItems, updateItems} from '../../itemAPI/item.api.js'
+import { deleteItems, fetchItems, totaldeleteItems, updateItems, totalupdateItems } from '../../itemAPI/item.api.js'
 import AddItemForm from '../AddItemForm/AddItemForm.jsx'
 
 function App() {
@@ -46,11 +46,24 @@ const handleClickUpdate = (itemDataId) => {
     updateItems(itemDataId)
     .then((response) => {
         refreshItems();
+        setButtonsVisible(false)
+
     })
     .catch((error) => {
         console.log('this error is for update but in the app', error)
     });
 }
+
+const handleClickTotalReset = () => {
+    totalupdateItems()
+    .then((response) => {
+        refreshItems();
+    })
+    .catch((error) => {
+        console.log('this error is for update total but in the app', error)
+    });
+}
+
 
 ;//initial load of component
 useEffect(() => {
@@ -65,7 +78,7 @@ return (
         <AddItemForm itemRefreshCallback={refreshItems} />
 
         <p> Shopping List </p>
-        <button> Reset </button>
+        <button onClick={(event) => handleClickTotalReset()}> Reset </button>
         <button onClick={(event) => handleClickTotalDelete()}> Clear </button>
         {shoppingList.map((itemData, dataIndex) => {
             return (
@@ -73,10 +86,11 @@ return (
                 <div key={dataIndex}>
                     <ul>
                     <li>{itemData.name}  Qty:{itemData.quantity}  {itemData.unit}</li>
+                    </ul>
                     <p> Bought?: {itemData.purchased ? 'Yes' : 'No'}  </p>
                     <button onClick={(event) => handleClickUpdate(itemData.id)}> Buy </button>
                     <button onClick={(event) => handleClickDelete(itemData.id)}> Remove </button>
-                    </ul>
+                   
                 </div>
             );
         })}
