@@ -8,18 +8,19 @@ export const postItems = (itemsData) => {
     return axios.post('/api/items', itemsData)
 };
 
-export const deleteItems = (itemsDataId) => {
-    return axios.delete(`/api/items/${itemsDataId}`)
+export const updateItemPurchased = (itemsData) => {
+    return axios.put(`/api/items/${itemsData}`);
 };
 
-export const updateItems = (itemsDataId) => {
-    return axios.put(`/api/items/${itemsDataId}`)
-}
+export const updateListPurchased = () => {
+    return axios.put('/api/items');
+};
 
-export const totaldeleteItems = () => {
+export const resetList = () => {
     return axios.delete('/api/items')
-}
+};
 
-export const totalupdateItems = () => {
-    return axios.put('/api/items/')
-}
+export const deleteGrocery = (itemsData) => {
+    return axios.delete(`/api/items/${itemsData}`)
+};
+

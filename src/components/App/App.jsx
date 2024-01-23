@@ -1,100 +1,45 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
-import Header from '../Header/Header.jsx'
+import Header from '../Header/Header.jsx';
 import './App.css';
-import { deleteItems, fetchItems, totaldeleteItems, updateItems, totalupdateItems } from '../../itemAPI/item.api.js'
+import { fetchItems } from '../../itemAPI/item.api.js'
 import AddItemForm from '../AddItemForm/AddItemForm.jsx'
+import ShoppingList from '../ShoppingList/ShoppingList.jsx';
+import Footer from '../Footer/Footer.jsx';
 
 function App() {
-    const [shoppingList, setShoppingList] = useState([]);  
+    const [shoppingList, setShoppingList] = useState([]);
+    const refreshItems = () => {
+        const shoppingListPromise = fetchItems();
+        shoppingListPromise
+            .then((response) => {
+                console.log('Server Data:', response);
+                setShoppingList(response.data);
+            })
+            .catch((err) => {
+                console.error('ERROR', err);
+            });
+    };
 
-
-const refreshItems = () => { 
-    const shoppingListPromise = fetchItems();
-    shoppingListPromise
-    .then((response) => {
-        console.log('Server Data:', response);
-        setShoppingList(response.data);
-    })
-  .catch((err) => {
-        console.log('ERROR', err);
-    });
-};
-
-const handleClickDelete = (itemDataId) => {
-    console.log('i hope this one is delete', itemDataId);
-    deleteItems(itemDataId)
-    .then((response) => {
+    ;//initial load of component
+    useEffect(() => {
+        //body
+        console.log('Welcome shopper');
+        //api call
         refreshItems();
-    })
-    .catch((error) => {
-        console.log('this is a delete error on the app', error);
-    });
-};
+    }, []);
 
-const handleClickTotalDelete = () => {
-    totaldeleteItems()
-    .then((response) => {
-        refreshItems();
-    })
-    .catch((error) => {
-        console.log('this is error for the clear button', error)
-    });
+
+    return (
+        <div>
+            <main>
+            <AddItemForm itemRefreshCallback={refreshItems} />
+            <ShoppingList
+                shoppingList={shoppingList}
+                shoppingListRefreshCall={refreshItems} />
+            </main>
+            <Footer shoppingListRefreshCall={refreshItems} />
+        </div>
+    );
 }
-
-const handleClickUpdate = (itemDataId) => {
-    updateItems(itemDataId)
-    .then((response) => {
-        refreshItems();
-        setButtonsVisible(false)
-
-    })
-    .catch((error) => {
-        console.log('this error is for update but in the app', error)
-    });
-}
-
-const handleClickTotalReset = () => {
-    totalupdateItems()
-    .then((response) => {
-        refreshItems();
-    })
-    .catch((error) => {
-        console.log('this error is for update total but in the app', error)
-    });
-}
-
-
-;//initial load of component
-useEffect(() => {
-    //body
-    console.log('Welcome shopper');
-    //api call
-    refreshItems();
-}, []);
-
-return (
-    <div>
-        <AddItemForm itemRefreshCallback={refreshItems} />
-
-        <p> Shopping List </p>
-        <button onClick={(event) => handleClickTotalReset()}> Reset </button>
-        <button onClick={(event) => handleClickTotalDelete()}> Clear </button>
-        {shoppingList.map((itemData, dataIndex) => {
-            return (
-              
-                <div key={dataIndex}>
-                    <ul>
-                    <li>{itemData.name}  Qty:{itemData.quantity}  {itemData.unit}</li>
-                    </ul>
-                    <p> Bought?: {itemData.purchased ? 'Yes' : 'No'}  </p>
-                    <button onClick={(event) => handleClickUpdate(itemData.id)}> Buy </button>
-                    <button onClick={(event) => handleClickDelete(itemData.id)}> Remove </button>
-                   
-                </div>
-            );
-        })}
-    </div>
-);
-} 
 export default App;
